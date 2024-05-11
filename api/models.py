@@ -1,7 +1,8 @@
 from django.db import models
 from django.conf import settings
+from django.db.models import Avg
+from django.db.models import ExpressionWrapper, F
 from django.contrib.auth.models import AbstractUser
-from django.db.models import JSONField
 
 # Vendor Model 
 
@@ -53,7 +54,7 @@ class PerformanceRecord(models.Model):
     date = models.DateTimeField()
     on_time_delivery_rate = models.FloatField()
     quality_rating_avg = models.FloatField()
-    average_response_time = models.FloatField()
+    average_response_time = models.FloatField(null=True)
     fulfillment_rate = models.FloatField()
 
     deleted = models.BooleanField(default=False, null=True)

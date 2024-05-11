@@ -16,6 +16,8 @@ from .serializers import VendorSerializer, PurchaseOrderSerializer, PerformanceR
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+from datetime import datetime
+
 from rest_framework_simplejwt.exceptions import InvalidToken
 
 def no_end_point(request : HttpRequest) -> HttpResponse :
@@ -57,6 +59,26 @@ def get_id(request):
             return int(request.data.get('id'))
         except Exception as e:
             return False
+        
+def performance_metrics_calculation(request, purchase_order):
+    """
+        This Function will calculate the performance metrics of the Vendor
+
+        Vendor Argument is an Vendor Instance
+        Purchasr Order Argument is an PO Instance
+        Request will give the request object 
+    """ 
+
+    try:
+        vendor = Vendor.objects.get(id=purchase_order.vendor)
+        completed_orders = vendor.purchase_orders.filter(status='Completed')
+        total_completed_orders = completed_orders.count()
+        print(vendor.name)
+        print(completed_orders)
+        print(total_completed_orders)
+    except Exception as e:
+        return False
+    
 
 class VendorAPI(APIView):
     """
@@ -64,10 +86,7 @@ class VendorAPI(APIView):
         POST - Creata a new Vendor
     """
 
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    
+    permission_classes = [IsAuthenticated]    
 
     def get(self, request, id=None,*args, **kwargs):
         try:
@@ -135,6 +154,8 @@ class PurchaseOrderAcknowledgment(APIView):
         POST - To Acknowledge the intended Purchase Order
     """
 
+    permission_classes = [IsAuthenticated]
+
     def post(self, request, *args, **kwargs):
         data = get_user_id(request)
         po_id = self.kwargs.get('id')
@@ -150,6 +171,9 @@ class PurchaseOrderAcknowledgment(APIView):
                 return Response({"error": "Purchase Order Not Found"}, status=status.HTTP_404_NOT_FOUND)
             
             if purchasr_order.vendor == vendor:
+                purchasr_order.acknowledgment_date = datetime.now()
+                
+                purchasr_order.save()
                 return JsonResponse({"message" : "Purchase Order Acknowledged"}, status=status.HTTP_200_OK)
         return JsonResponse({"error" : "Currepted Token"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -158,6 +182,8 @@ class VendorPerformance(APIView):
     """
         GET - Retrieve Vendor Performance Data
     """
+
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         try:
@@ -184,7 +210,6 @@ class PurchaseOrderAPI(APIView):
         POST - Creata a new Purchase Order 
     """
 
-    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
