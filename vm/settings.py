@@ -2,6 +2,8 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+BASE_URL = "http://127.0.0.1:8000"
+
 SECRET_KEY = 'django-insecure-92s9w$0n(um^!!u@bs!zp^^h8=nj-1^mo-r7r@xro)e!6e4vk#'
 
 DEBUG = True
