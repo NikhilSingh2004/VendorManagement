@@ -77,6 +77,8 @@ class PurchaseOrderSerializer(serializers.ModelSerializer):
         instance.acknowledgment_date = validated_data.get('acknowledgment_date', instance.acknowledgment_date)
         instance.delivered_on = validated_data.get('delivered_on', instance.delivered_on)
         
+        instance.any_issue = validated_data.get('any_issue', instance.any_issue)
+
         instance.save()
 
         return instance

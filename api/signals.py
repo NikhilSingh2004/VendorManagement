@@ -24,8 +24,11 @@ def update_vendor_performance(sender, instance, created, **kwargs):
                 vendor.quality_rating_avg = completed_orders.exclude(quality_rating__isnull=True).aggregate(Avg('quality_rating'))['quality_rating__avg']
 
                 # Calculate the fulfilment rate using the any_issue filed
-                successfully_fulfilled = PurchaseOrder.objects.filter(vendor=vendor, status='completed', any_issue=False).count()
-                vendor.fulfilment_rate = successfully_fulfilled / total_completed_orders
+                successfully_fulfilled = PurchaseOrder.objects.filter(vendor=vendor, status='Completed', any_issue=False).count()
+
+                print(successfully_fulfilled)
+                vendor.fulfillment_rate = (successfully_fulfilled / total_completed_orders)*100
+                print(vendor.fulfillment_rate)
 
                 # Calculate Average Response Time 
                 total_response_time = timedelta()
