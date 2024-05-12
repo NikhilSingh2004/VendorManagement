@@ -1,0 +1,386 @@
+{
+	"info": {
+		"_postman_id": "03e809f0-35d1-42c1-a32d-5b1bab165ce5",
+		"name": "VMS API's",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34873005"
+	},
+	"item": [
+		{
+			"name": "GET Vendor",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1NTI4NzAxLCJpYXQiOjE3MTU1MjUxMDEsImp0aSI6IjQ5ZWVmNGQwOGZlOTQ0ZjdiZTc4OTc1YzE2NGNkZTkzIiwidXNlcl9pZCI6MX0._gsuyxtcH6xQyz5WQB44I08Di56pfzhdijQsHvAbgcE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/vendor/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"vendor",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Create Vendor",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"ExampleVendor\",\r\n    \"password\": \"ExamplePassword\",\r\n    \"name\": \"Example Vendor 1\",\r\n    \"phone_number\": \"+919898989898\",\r\n    \"email\": \"ex@example.com\",\r\n    \"address\": \"Mumbai, Maharashtra, India, Earth, Milky Way\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/vendor/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"vendor",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Update Vendor",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1NTI4NzAxLCJpYXQiOjE3MTU1MjUxMDEsImp0aSI6IjQ5ZWVmNGQwOGZlOTQ0ZjdiZTc4OTc1YzE2NGNkZTkzIiwidXNlcl9pZCI6MX0._gsuyxtcH6xQyz5WQB44I08Di56pfzhdijQsHvAbgcE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\" : \"ChangedUser\",\r\n  \"password\" : \"ChangedPassword\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/vendor/5/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"vendor",
+						"5",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Vendor",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1NTI4NzAxLCJpYXQiOjE3MTU1MjUxMDEsImp0aSI6IjQ5ZWVmNGQwOGZlOTQ0ZjdiZTc4OTc1YzE2NGNkZTkzIiwidXNlcl9pZCI6MX0._gsuyxtcH6xQyz5WQB44I08Di56pfzhdijQsHvAbgcE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/vendor/5/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"vendor",
+						"5",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Purchase Orders",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1NTI4NzAxLCJpYXQiOjE3MTU1MjUxMDEsImp0aSI6IjQ5ZWVmNGQwOGZlOTQ0ZjdiZTc4OTc1YzE2NGNkZTkzIiwidXNlcl9pZCI6MX0._gsuyxtcH6xQyz5WQB44I08Di56pfzhdijQsHvAbgcE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/purchase_orders/8/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"purchase_orders",
+						"8",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Create Purchase Order",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1NTI4NzAxLCJpYXQiOjE3MTU1MjUxMDEsImp0aSI6IjQ5ZWVmNGQwOGZlOTQ0ZjdiZTc4OTc1YzE2NGNkZTkzIiwidXNlcl9pZCI6MX0._gsuyxtcH6xQyz5WQB44I08Di56pfzhdijQsHvAbgcE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"vendor\": 1,\r\n  \"order_date\": \"2024-05-12T08:00:00Z\",\r\n  \"delivery_date\": \"2024-05-20T08:00:00Z\",\r\n  \"items\": [\r\n    {\r\n      \"item_id\": 101,\r\n      \"name\": \"IPhone 17 Pro Max\",\r\n      \"quantity\": 2,\r\n      \"price\": 200000.00\r\n    }\r\n  ],\r\n  \"quantity\": 2,\r\n  \"status\": \"Pending\",\r\n  \"issue_date\": \"2024-05-12T08:00:00Z\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/purchase_orders/8/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"purchase_orders",
+						"8",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Update Purchase Order",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1NTI4NzAxLCJpYXQiOjE3MTU1MjUxMDEsImp0aSI6IjQ5ZWVmNGQwOGZlOTQ0ZjdiZTc4OTc1YzE2NGNkZTkzIiwidXNlcl9pZCI6MX0._gsuyxtcH6xQyz5WQB44I08Di56pfzhdijQsHvAbgcE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"status\" : \"Completed\",\r\n  \"quality_rating\" : 1.85,\r\n  \"any_issue\" : false,\r\n  \"delivered_on\" : \"2024-05-12T19:17:18.336822-05:00\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/purchase_orders/8/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"purchase_orders",
+						"8",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Purchase Order",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1NTI4NzAxLCJpYXQiOjE3MTU1MjUxMDEsImp0aSI6IjQ5ZWVmNGQwOGZlOTQ0ZjdiZTc4OTc1YzE2NGNkZTkzIiwidXNlcl9pZCI6MX0._gsuyxtcH6xQyz5WQB44I08Di56pfzhdijQsHvAbgcE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/purchase_orders/5/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"purchase_orders",
+						"5",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Acknowledgment of PO",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1NTI4NzAxLCJpYXQiOjE3MTU1MjUxMDEsImp0aSI6IjQ5ZWVmNGQwOGZlOTQ0ZjdiZTc4OTc1YzE2NGNkZTkzIiwidXNlcl9pZCI6MX0._gsuyxtcH6xQyz5WQB44I08Di56pfzhdijQsHvAbgcE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/purchase_orders/10/acknowledgment/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"purchase_orders",
+						"10",
+						"acknowledgment",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Vendor Performance",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1NTI4NzAxLCJpYXQiOjE3MTU1MjUxMDEsImp0aSI6IjQ5ZWVmNGQwOGZlOTQ0ZjdiZTc4OTc1YzE2NGNkZTkzIiwidXNlcl9pZCI6MX0._gsuyxtcH6xQyz5WQB44I08Di56pfzhdijQsHvAbgcE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/vendors/1/performance/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"vendors",
+						"1",
+						"performance",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

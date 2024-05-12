@@ -13,7 +13,6 @@ class VendorSerializer(serializers.ModelSerializer):
         """
             Create and return a new `Vendor` instance, given the validated data.
         """
-        print('1.1')
         return Vendor.objects.create(**validated_data)
     
     def update(self, instance, validated_data):

@@ -5,7 +5,7 @@ import json
 from rest_framework import status
 from rest_framework.views import APIView
 from django.conf import settings
-
+from datetime import timedelta
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
@@ -66,7 +66,10 @@ class VendorAPI(APIView):
         POST - Creata a new Vendor
     """
 
-    permission_classes = [IsAuthenticated]    
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return []
+        return [IsAuthenticated()]
 
     def get(self, request, id=None,*args, **kwargs):
         try:
@@ -169,7 +172,7 @@ class PurchaseOrderAcknowledgment(APIView):
             
             return Response({"error": "Purchase Order Already Acknowledged"}, status=status.HTTP_400_BAD_REQUEST)
         return JsonResponse({"error" : "Currepted Token"}, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 class VendorPerformance(APIView):
     """
@@ -185,12 +188,31 @@ class VendorPerformance(APIView):
             if vendor:
                 print("Inside Serialization")
                 serializer = VendorSerializer(vendor)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            return Response({"error" : "Vendor Not Found"}, status=status.HTTP_404_NOT_FOUND)
+
+                # Convert microseconds to timedelta
+                average_response_time_microseconds = serializer.data.get('average_response_time')
+                if average_response_time_microseconds is not None:
+                    average_response_time = timedelta(microseconds=average_response_time_microseconds)
+                else:
+                    average_response_time = None
+
+                print(vendor.average_response_time)
+
+                # Construct response data
+                data = {
+                    "Vendor Name": serializer.data['name'],
+                    "On Time Delivery Rate": serializer.data['on_time_delivery_rate'],
+                    "Quality Rating Average": serializer.data['quality_rating_avg'],
+                    "Average Response Time": vendor.average_response_time,
+                    "Fulfillment Rate": serializer.data['fulfillment_rate']
+                }
+
+                return Response(data, status=status.HTTP_200_OK)
+            return Response({"error": "Vendor Not Found"}, status=status.HTTP_404_NOT_FOUND)
         except InvalidToken:
-            return Response({"error" : "Invalid Token"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Invalid Token"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            return JsonResponse({"error" : "Something Went Wrong"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return JsonResponse({"error": "Something Went Wrong"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class PurchaseOrderAPI(APIView):
