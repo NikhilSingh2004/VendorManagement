@@ -11,7 +11,7 @@ def update_vendor_performance(sender, instance, created, **kwargs):
         print("Executing")
         if instance.status == 'Completed' and instance.vendor:
             vendor = instance.vendor
-            completed_orders = vendor.purchase_orders.filter(status='Completed')
+            completed_orders = vendor.purchase_orders.filter(status='Completed', deleted=False)
             total_completed_orders = completed_orders.count()
             if total_completed_orders > 0:
                 total_response_time = timedelta()

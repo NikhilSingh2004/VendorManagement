@@ -7,12 +7,13 @@ class VendorSerializer(serializers.ModelSerializer):
         model = Vendor
         fields = ['name', 'phone_number', 'email', 'address', 'vendor_code', 
                   'on_time_delivery_rate', 'quality_rating_avg', 'average_response_time', 
-                  'fulfillment_rate']
+                  'fulfillment_rate', 'username', 'password']
 
     def create(self, validated_data):
         """
             Create and return a new `Vendor` instance, given the validated data.
         """
+        print('1.1')
         return Vendor.objects.create(**validated_data)
     
     def update(self, instance, validated_data):
@@ -20,7 +21,7 @@ class VendorSerializer(serializers.ModelSerializer):
             Update and return an existing `Vendor` instance, given the validated data.
         """
         instance.name = validated_data.get('name', instance.name)
-        instance.phone = validated_data.get('phone_number', instance.phone)
+        instance.phone_number = validated_data.get('phone_number', instance.phone_number)
         instance.email = validated_data.get('email', instance.email)
         instance.address = validated_data.get('address', instance.address)
         instance.vendor_code = validated_data.get('vendor_code', instance.vendor_code)
@@ -28,7 +29,8 @@ class VendorSerializer(serializers.ModelSerializer):
         instance.quality_rating_avg = validated_data.get('quality_rating_avg', instance.quality_rating_avg)
         instance.average_response_time = validated_data.get('average_response_time', instance.average_response_time)
         instance.fulfillment_rate = validated_data.get('fulfillment_rate', instance.fulfillment_rate)
-
+        instance.username = validated_data.get('username', instance.username)
+        instance.password = validated_data.get('password', instance.password)
         instance.save()
 
         return instance
@@ -39,21 +41,13 @@ class VendorSerializer(serializers.ModelSerializer):
         if len(value) >= 100:
             raise serializers.ValidationError("Name is too Long")
         return str(value).capitalize()
-        
-    def validate_phone(self, value):
-        if len(value) > 13:
-            raise serializers.ValidationError("Phone No. Exceds It's Length")
-        if not str(value).startswith('+91'):
-            raise serializers.ValidationError("The System Only accepts Indian Phone No.")
-        return str(value)
-
 
 class PurchaseOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = PurchaseOrder
         fields = ['po_number', 'vendor', 'order_date', 'delivery_date', 
                   'items', 'quantity', 'status', 'quality_rating', 'issue_date', 
-                  'acknowledgment_date', 'delivered_on']
+                  'acknowledgment_date', 'delivered_on', 'any_issue']
 
     def create(self, validated_data):
         """

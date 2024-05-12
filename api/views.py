@@ -48,7 +48,7 @@ def get_user_id(request):
 
 def get_vendor(v_id):
     try:
-        return Vendor.objects.get(id=v_id, deleted=False, is_staff=False, is_superuser=False)
+        return Vendor.objects.get(id=v_id, deleted=False)
     except Vendor.DoesNotExist:
         return False
         
@@ -77,36 +77,32 @@ class VendorAPI(APIView):
                     serializer = VendorSerializer(vendor)
                     return Response(serializer.data, status=status.HTTP_200_OK)    
                 return Response({"error" : "Vendor Not Found"}, status=status.HTTP_404_NOT_FOUND)    
-            vendors = Vendor.objects.filter(deleted=False, is_staff=False, is_superuser=False)
+            vendors = Vendor.objects.filter(deleted=False)
             serializer = VendorSerializer(vendors, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"message": "Something Went Wrong"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def post(self, request, *args, **kwargs):
-        try:
-            serializer = VendorSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                message = f"Vendor Created, {serializer.data['name']}"
-                return Response({"message": message}, status=status.HTTP_200_OK)
-            return Response({"error": "Input Data not Valid", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            return Response({"error": "Something Went Wrong"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def post(self, request, *args, **kwargs):
         try:
             raw_data = request.body
+            print('1')
             stream = io.BytesIO(raw_data)
+            print('2')
             json_data = JSONParser().parse(stream)
+            print('3')
             json_data['vendor_code'] = str(uuid.uuid4())
+            print('4')
             serializer = VendorSerializer(data=json_data)
             if serializer.is_valid():
+                print('5')
                 serializer.save()
                 message = f"Vendor Created, {serializer.data['vendor_code']}"
                 return Response({"message": message}, status=status.HTTP_200_OK)
             return Response({"error": "Input Data not Valid", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
+            print(e.__str__())
             return Response({"error": "Something Went Wrong"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -129,7 +125,7 @@ class VendorAPI(APIView):
     
     def delete(self, request, *args, **kwargs):
         try:
-            vendor_id = get_id(request)
+            vendor_id = self.kwargs.get('id')
             if vendor_id is not None:
                 try:
                     vendor = Vendor.objects.get(id=vendor_id, deleted=False)
@@ -185,11 +181,7 @@ class VendorPerformance(APIView):
     def get(self, request, *args, **kwargs):
         try:
             vendor_id = get_user_id(request)
-            print(vendor_id)
-            print('1')
-            vendor = get_vendor(vendor_id)
-            print(vendor)
-            print('2')
+            vendor = get_vendor(vendor_id['user_id'])
             if vendor:
                 print("Inside Serialization")
                 serializer = VendorSerializer(vendor)
