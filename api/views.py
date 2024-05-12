@@ -33,7 +33,6 @@ def no_end_point(request : HttpRequest) -> HttpResponse :
 def get_user_id(request):
     try:
         token = request.headers.get('Authorization', '').split(' ')[1]
-        print(token)
         try:
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
             user_id = payload['user_id']
@@ -60,25 +59,6 @@ def get_id(request):
         except Exception as e:
             return False
         
-def performance_metrics_calculation(request, purchase_order):
-    """
-        This Function will calculate the performance metrics of the Vendor
-
-        Vendor Argument is an Vendor Instance
-        Purchasr Order Argument is an PO Instance
-        Request will give the request object 
-    """ 
-
-    try:
-        vendor = Vendor.objects.get(id=purchase_order.vendor)
-        completed_orders = vendor.purchase_orders.filter(status='Completed')
-        total_completed_orders = completed_orders.count()
-        print(vendor.name)
-        print(completed_orders)
-        print(total_completed_orders)
-    except Exception as e:
-        return False
-    
 
 class VendorAPI(APIView):
     """
@@ -113,7 +93,23 @@ class VendorAPI(APIView):
             return Response({"error": "Input Data not Valid", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"error": "Something Went Wrong"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
+    def post(self, request, *args, **kwargs):
+        try:
+            raw_data = request.body
+            stream = io.BytesIO(raw_data)
+            json_data = JSONParser().parse(stream)
+            json_data['vendor_code'] = str(uuid.uuid4())
+            serializer = VendorSerializer(data=json_data)
+            if serializer.is_valid():
+                serializer.save()
+                message = f"Vendor Created, {serializer.data['vendor_code']}"
+                return Response({"message": message}, status=status.HTTP_200_OK)
+            return Response({"error": "Input Data not Valid", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"error": "Something Went Wrong"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
     def put(self, request, *args, **kwargs):
         try:
             vendor_id = self.kwargs.get('id')
@@ -170,13 +166,14 @@ class PurchaseOrderAcknowledgment(APIView):
             except PurchaseOrder.DoesNotExist:
                 return Response({"error": "Purchase Order Not Found"}, status=status.HTTP_404_NOT_FOUND)
             
-            if purchasr_order.vendor == vendor:
+            if not (purchasr_order.acknowledgment_date) and purchasr_order.vendor == vendor:
                 purchasr_order.acknowledgment_date = datetime.now()
-                
                 purchasr_order.save()
                 return JsonResponse({"message" : "Purchase Order Acknowledged"}, status=status.HTTP_200_OK)
-        return JsonResponse({"error" : "Currepted Token"}, status=status.HTTP_404_NOT_FOUND)
-
+            
+            return Response({"error": "Purchase Order Already Acknowledged"}, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({"error" : "Currepted Token"}, status=status.HTTP_400_BAD_REQUEST)
+    
 
 class VendorPerformance(APIView):
     """
@@ -250,10 +247,12 @@ class PurchaseOrderAPI(APIView):
                 try:
                     purchase_order = PurchaseOrder.objects.get(id = po_id)
                     serializer = PurchaseOrderSerializer(purchase_order, data=request.data, partial=True)
-                    if serializer.is_valid():
-                        serializer.save()
-                        return Response(serializer.data)
-                    return Response({"error": "Input Data Not valid"}, status=status.HTTP_400_BAD_REQUEST)
+                    if purchase_order.acknowledgment_date or purchase_order.status == "Completed":
+                        if serializer.is_valid():
+                            serializer.save()
+                            return Response(serializer.data)
+                        return Response({"error": "Input Data Not valid"}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({"error": "Purchase Order Not Acknowledgment"}, status=status.HTTP_400_BAD_REQUEST)
                 except PurchaseOrder.DoesNotExist :
                     return Response({"error": "Purchase Order Not Found"}, status=status.HTTP_400_BAD_REQUEST)
             return Response({"error": "Please Provide the Purchase Order ID"}, status=status.HTTP_400_BAD_REQUEST)

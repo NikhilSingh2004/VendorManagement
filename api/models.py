@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
 from django.db.models import Avg
-from django.db.models import ExpressionWrapper, F
 from django.contrib.auth.models import AbstractUser
 
 # Vendor Model 
@@ -15,7 +14,7 @@ class Vendor(AbstractUser):
     vendor_code = models.CharField(max_length=50, unique=True, null=True, blank=True)
     on_time_delivery_rate = models.FloatField(null=True, blank=True)
     quality_rating_avg = models.FloatField(null=True, blank=True)
-    average_response_time = models.FloatField(null=True, blank=True)
+    average_response_time = models.DurationField(null=True, blank=True)
     fulfillment_rate = models.FloatField(null=True, blank=True)
     
     deleted = models.BooleanField(default=False)
@@ -39,7 +38,11 @@ class PurchaseOrder(models.Model):
     status = models.CharField(max_length=50)
     quality_rating = models.FloatField(null=True, blank=True)
     issue_date = models.DateTimeField()
-    acknowledgment_date = models.DateTimeField(null=True, blank=True)
+    acknowledgment_date = models.DateTimeField(null=True)
+
+    delivered_on = models.DateTimeField(null=True, blank=True) # Field To Note the Actual Date of Delivery
+
+    any_issue = models.BooleanField(null=True, blank=True, default=False)
 
     deleted = models.BooleanField(default=False, null=True)
     
@@ -54,7 +57,7 @@ class PerformanceRecord(models.Model):
     date = models.DateTimeField()
     on_time_delivery_rate = models.FloatField()
     quality_rating_avg = models.FloatField()
-    average_response_time = models.FloatField(null=True)
+    average_response_time = models.DurationField(null=True, blank=True)
     fulfillment_rate = models.FloatField()
 
     deleted = models.BooleanField(default=False, null=True)

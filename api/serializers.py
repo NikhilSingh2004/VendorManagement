@@ -53,7 +53,7 @@ class PurchaseOrderSerializer(serializers.ModelSerializer):
         model = PurchaseOrder
         fields = ['po_number', 'vendor', 'order_date', 'delivery_date', 
                   'items', 'quantity', 'status', 'quality_rating', 'issue_date', 
-                  'acknowledgment_date']
+                  'acknowledgment_date', 'delivered_on']
 
     def create(self, validated_data):
         """
@@ -74,7 +74,8 @@ class PurchaseOrderSerializer(serializers.ModelSerializer):
         instance.status = validated_data.get('status', instance.status)
         instance.quality_rating = validated_data.get('quality_rating', instance.quality_rating)
         instance.issue_date = validated_data.get('issue_date', instance.issue_date)
-        instance.sacknowledgment_date = validated_data.get('sacknowledgment_date', instance.acknowledgment_date)
+        instance.acknowledgment_date = validated_data.get('acknowledgment_date', instance.acknowledgment_date)
+        instance.delivered_on = validated_data.get('delivered_on', instance.delivered_on)
         
         instance.save()
 

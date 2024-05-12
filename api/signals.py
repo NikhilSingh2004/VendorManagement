@@ -1,9 +1,9 @@
-from django.db import models
+from django.db.models import F
 from django.db.models import Avg
 from django.dispatch import receiver
+from datetime import datetime, timedelta
 from django.db.models.signals import post_save
 from .models import Vendor, PurchaseOrder, PerformanceRecord
-from datetime import datetime, timedelta
 
 @receiver(post_save, sender=PurchaseOrder)
 def update_vendor_performance(sender, instance, created, **kwargs):
@@ -16,17 +16,37 @@ def update_vendor_performance(sender, instance, created, **kwargs):
             if total_completed_orders > 0:
                 total_response_time = timedelta()
 
-                vendor.on_time_delivery_rate = completed_orders.filter(delivery_date__lte=models.F('delivery_date')).count() / total_completed_orders
+                # Calculate On Time Delivery Rate, But using the Delivered on Date
+                on_time_deliveries = completed_orders.filter(delivered_on__lte=F('delivery_date')).count()
+                vendor.on_time_delivery_rate = (on_time_deliveries / completed_orders.count())*100
+
+                # Calculate Quality Ratinng Average : Add all the Quality Rating of the Completed Orders and Divide it with the PO's
                 vendor.quality_rating_avg = completed_orders.exclude(quality_rating__isnull=True).aggregate(Avg('quality_rating'))['quality_rating__avg']
-                vendor.fulfillment_rate = completed_orders.filter(status='completed').exclude(quality_rating__lt=5).count() / total_completed_orders
+
+                # Calculate the fulfilment rate using the any_issue filed
+                successfully_fulfilled = PurchaseOrder.objects.filter(vendor=vendor, status='completed', any_issue=False).count()
+                vendor.fulfilment_rate = successfully_fulfilled / total_completed_orders
+
+                # Calculate Average Response Time 
+                total_response_time = timedelta()
+                print('1')
                 for order in completed_orders:
                     if order.acknowledgment_date:
                         response_time = order.acknowledgment_date - order.issue_date
                         total_response_time += response_time
-                average_response_time = total_response_time.total_seconds() / total_completed_orders / 60
-                vendor.average_response_time = average_response_time
+
+                print(total_response_time)
+                if total_completed_orders > 0:
+                    average_response_time = total_response_time / total_completed_orders
+                else:
+                    average_response_time = timedelta() 
+
+                vendor.average_response_time = (average_response_time)
+                print(vendor.average_response_time)
 
                 vendor.save()
+
+                print('10')
 
                 performance_record = PerformanceRecord.objects.create(
                     vendor=vendor,

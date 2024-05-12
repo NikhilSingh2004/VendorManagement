@@ -1,0 +1,11 @@
+Issues
+
+1) One Purchase Order being acknowledged multiple times (Done)
+
+2) Make mechanism so that the purchase order is first acknowledged then only the status can be changed 
+
+3) The Average Response Time is in pure numbers, convert those minutes in datetime 
+
+4) Implement Validation Checks on the Input Data
+
+5) The Float Fields are is having lot of accuracy, make the pointing accuracy of 2 digits only
