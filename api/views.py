@@ -2,23 +2,20 @@ import io
 import jwt
 import uuid
 import json
+from datetime import datetime
+from datetime import timedelta
+from django.conf import settings
 from rest_framework import status
 from rest_framework.views import APIView
-from django.conf import settings
-from datetime import timedelta
+from .models import Vendor, PurchaseOrder
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
-from .models import Vendor, PurchaseOrder, PerformanceRecord
-from django.http import HttpRequest, HttpResponse, JsonResponse 
-from .serializers import VendorSerializer, PurchaseOrderSerializer, PerformanceRecordSerializer
-
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
-
-from datetime import datetime
-
 from rest_framework_simplejwt.exceptions import InvalidToken
+from django.http import HttpRequest, HttpResponse, JsonResponse 
+from .serializers import VendorSerializer, PurchaseOrderSerializer
+
 
 def no_end_point(request : HttpRequest) -> HttpResponse :
     try:
