@@ -189,9 +189,9 @@ class VendorPerformance(APIView):
                 # Convert microseconds to timedelta
                 average_response_time_microseconds = serializer.data.get('average_response_time')
                 if average_response_time_microseconds is not None:
-                    average_response_time = timedelta(microseconds=average_response_time_microseconds)
+                    vendor.average_response_time = timedelta(microseconds=average_response_time_microseconds)
                 else:
-                    average_response_time = None
+                    vendor.average_response_time = None
 
                 print(vendor.average_response_time)
 
